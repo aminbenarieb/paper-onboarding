@@ -93,12 +93,8 @@ extension OnboardingContentView {
 
         let item = Init(OnboardingContentViewItem.itemOnView(self, titlePadding: info.titleLabelPadding, descriptionPadding: info.descriptionLabelPadding)) {
             $0.imageView?.image = info.informationImage
-            $0.titleLabel?.text = info.title
-            $0.titleLabel?.font = info.titleFont
-            $0.titleLabel?.textColor = info.titleColor
+            $0.titleLabel?.attributedText = info.title
             $0.descriptionLabel?.attributedText = info.description
-//            $0.descriptionLabel?.font = info.descriptionFont
-//            $0.descriptionLabel?.textColor = info.descriptionColor
             $0.descriptionSubtextsToActions = info.descriptionSubtextsToActions
         }
 

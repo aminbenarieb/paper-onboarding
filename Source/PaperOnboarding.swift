@@ -10,29 +10,21 @@ import UIKit
 
 public struct OnboardingItemInfo {
     public let informationImage: UIImage
-    public let title: String
+    public let title: NSAttributedString
     public let description: NSAttributedString
     public let descriptionSubtextsToActions: [String: () ->(Void)]?
     public let pageIcon: UIImage
     public let color: UIColor
-    public let titleColor: UIColor
-    public let descriptionColor: UIColor
-    public let titleFont: UIFont
-    public let descriptionFont: UIFont
     public let descriptionLabelPadding: CGFloat
     public let titleLabelPadding: CGFloat
     
-    public init (informationImage: UIImage, title: String, description: NSAttributedString, descriptionSubtextsToActions: [String: () ->(Void)]? = nil, pageIcon: UIImage, color: UIColor, titleColor: UIColor, descriptionColor: UIColor, titleFont: UIFont, descriptionFont: UIFont, descriptionLabelPadding: CGFloat = 0, titleLabelPadding: CGFloat = 0) {
+    public init (informationImage: UIImage, title: NSAttributedString, description: NSAttributedString, descriptionSubtextsToActions: [String: () ->(Void)]? = nil, pageIcon: UIImage, color: UIColor, descriptionLabelPadding: CGFloat = 0, titleLabelPadding: CGFloat = 0) {
         self.informationImage = informationImage
         self.title = title
         self.description = description
         self.descriptionSubtextsToActions = descriptionSubtextsToActions
         self.pageIcon = pageIcon
         self.color = color
-        self.titleColor = titleColor
-        self.descriptionColor = descriptionColor
-        self.titleFont = titleFont
-        self.descriptionFont = descriptionFont
         self.descriptionLabelPadding = descriptionLabelPadding
         self.titleLabelPadding = titleLabelPadding
     }

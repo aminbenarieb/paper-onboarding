@@ -14,32 +14,28 @@ class ViewController: UIViewController {
 
     fileprivate let items = [
         OnboardingItemInfo(informationImage: Asset.hotels.image,
-                           title: "Hotels",
+                           title: NSAttributedString(string: "Hotels"),
                            description: NSAttributedString(string: "All hotels and hostels are sorted by hospitality").colored(.green).applying(attributes: [NSAttributedString.Key.foregroundColor : UIColor.red], toOccurrencesOf: "hotels").font(descriptionFont).textAlignment(.center),
                            descriptionSubtextsToActions: ["hotels": { () -> (Void) in
                             print("hotels")
                             }],
                            pageIcon: Asset.key.image,
-                           color: UIColor(red: 0.40, green: 0.56, blue: 0.71, alpha: 1.00),
-                           titleColor: UIColor.white,
-                           descriptionColor: UIColor.white,
-                           titleFont: titleFont,
-                           descriptionFont: descriptionFont
+                           color: UIColor(red: 0.40, green: 0.56, blue: 0.71, alpha: 1.00)
                            ),
         
         OnboardingItemInfo(informationImage: Asset.banks.image,
-                           title: "Banks",
+                           title: NSAttributedString(string: "Banks"),
                            description: NSAttributedString(string: "We carefully verify all banks before add them into the app"),
                            pageIcon: Asset.wallet.image,
-                           color: UIColor(red: 0.40, green: 0.69, blue: 0.71, alpha: 1.00),
-                           titleColor: UIColor.white, descriptionColor: UIColor.white, titleFont: titleFont, descriptionFont: descriptionFont),
+                           color: UIColor(red: 0.40, green: 0.69, blue: 0.71, alpha: 1.00)
+        ),
         
         OnboardingItemInfo(informationImage: Asset.stores.image,
-                           title: "Stores",
+                           title: NSAttributedString(string: "Stores"),
                            description: NSAttributedString(string: "All local stores are categorized for your convenience"),
                            pageIcon: Asset.shoppingCart.image,
-                           color: UIColor(red: 0.61, green: 0.56, blue: 0.74, alpha: 1.00),
-                           titleColor: UIColor.white, descriptionColor: UIColor.white, titleFont: titleFont, descriptionFont: descriptionFont),
+                           color: UIColor(red: 0.61, green: 0.56, blue: 0.74, alpha: 1.00)
+        ),
         
         ]
     
