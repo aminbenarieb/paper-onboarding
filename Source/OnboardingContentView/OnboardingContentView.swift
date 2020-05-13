@@ -96,9 +96,10 @@ extension OnboardingContentView {
             $0.titleLabel?.text = info.title
             $0.titleLabel?.font = info.titleFont
             $0.titleLabel?.textColor = info.titleColor
-            $0.descriptionLabel?.text = info.description
-            $0.descriptionLabel?.font = info.descriptionFont
-            $0.descriptionLabel?.textColor = info.descriptionColor
+            $0.descriptionLabel?.attributedText = info.description
+//            $0.descriptionLabel?.font = info.descriptionFont
+//            $0.descriptionLabel?.textColor = info.descriptionColor
+            $0.descriptionSubtextsToActions = info.descriptionSubtextsToActions
         }
 
         delegate?.onboardingConfigurationItem(item, index: index)

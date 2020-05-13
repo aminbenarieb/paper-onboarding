@@ -11,7 +11,8 @@ import UIKit
 public struct OnboardingItemInfo {
     public let informationImage: UIImage
     public let title: String
-    public let description: String
+    public let description: NSAttributedString
+    public let descriptionSubtextsToActions: [String: () ->(Void)]?
     public let pageIcon: UIImage
     public let color: UIColor
     public let titleColor: UIColor
@@ -21,10 +22,11 @@ public struct OnboardingItemInfo {
     public let descriptionLabelPadding: CGFloat
     public let titleLabelPadding: CGFloat
     
-    public init (informationImage: UIImage, title: String, description: String, pageIcon: UIImage, color: UIColor, titleColor: UIColor, descriptionColor: UIColor, titleFont: UIFont, descriptionFont: UIFont, descriptionLabelPadding: CGFloat = 0, titleLabelPadding: CGFloat = 0) {
+    public init (informationImage: UIImage, title: String, description: NSAttributedString, descriptionSubtextsToActions: [String: () ->(Void)]? = nil, pageIcon: UIImage, color: UIColor, titleColor: UIColor, descriptionColor: UIColor, titleFont: UIFont, descriptionFont: UIFont, descriptionLabelPadding: CGFloat = 0, titleLabelPadding: CGFloat = 0) {
         self.informationImage = informationImage
         self.title = title
         self.description = description
+        self.descriptionSubtextsToActions = descriptionSubtextsToActions
         self.pageIcon = pageIcon
         self.color = color
         self.titleColor = titleColor
@@ -142,18 +144,23 @@ extension PaperOnboarding {
     }
 
     @objc fileprivate func tapAction(_ sender: UITapGestureRecognizer) {
-        guard
-            (delegate as? PaperOnboardingDelegate)?.enableTapsOnPageControl == true,
-            let pageView = self.pageView,
-            let pageControl = pageView.containerView
-        else { return }
         let touchLocation = sender.location(in: self)
-        let convertedLocation = pageControl.convert(touchLocation, from: self)
-        guard let pageItem = pageView.hitTest(convertedLocation, with: nil) else { return }
-        let index = pageItem.tag - 1
-        guard index != currentIndex else { return }
-        currentIndex(index, animated: true)
-        (delegate as? PaperOnboardingDelegate)?.onboardingWillTransitonToIndex(index)
+        // OnboardingView
+        if let contentView = self.contentView {
+            let convertedLocation = contentView.convert(touchLocation, from: self)
+            contentView.hitTest(convertedLocation, with: nil)
+        }
+
+        // PageControl
+        if (delegate as? PaperOnboardingDelegate)?.enableTapsOnPageControl == true,
+            let pageView = self.pageView,
+            let convertedLocation = pageView.containerView?.convert(touchLocation, from: self),
+            let pageItem = pageView.hitTest(convertedLocation, with: nil) {
+            let index = pageItem.tag - 1
+            guard index != currentIndex else { return }
+            currentIndex(index, animated: true)
+            (delegate as? PaperOnboardingDelegate)?.onboardingWillTransitonToIndex(index)
+        }
     }
 
     fileprivate func createPageView() -> PageView {

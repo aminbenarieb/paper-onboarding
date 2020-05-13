@@ -18,6 +18,7 @@ open class OnboardingContentViewItem: UIView {
     open var imageView: UIImageView?
     open var titleLabel: UILabel?
     open var descriptionLabel: UILabel?
+    open var descriptionSubtextsToActions: [String: () -> ()]?
 
     init(titlePadding: CGFloat, descriptionPadding: CGFloat) {
         super.init(frame: .zero)
@@ -26,6 +27,15 @@ open class OnboardingContentViewItem: UIView {
 
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let view = super.hitTest(point, with: event)
+        if let view = view, let descriptionLabel = self.descriptionLabel, view == descriptionLabel {
+            let convertedLocation = view.convert(point, from: self)
+            self.tapAction(location: convertedLocation)
+        }
+        return self
     }
 }
 
@@ -94,6 +104,8 @@ private extension OnboardingContentViewItem {
         self.titleLabel = titleLabel
         self.descriptionLabel = descriptionLabel
         self.imageView = imageView
+
+        isUserInteractionEnabled = true
     }
 
     func createTitleLabel(_ onView: UIView, padding: CGFloat) -> UILabel {
@@ -129,6 +141,7 @@ private extension OnboardingContentViewItem {
         let label = Init(createLabel()) {
             $0.font = UIFont(name: "OpenSans-Regular", size: 14)
             $0.numberOfLines = 0
+            $0.isUserInteractionEnabled = true
         }
         onView.addSubview(label)
 
@@ -189,5 +202,48 @@ private extension OnboardingContentViewItem {
         }
 
         return imageView
+    }
+
+    // MARK: Actions
+
+    func tapAction(location: CGPoint) {
+        guard let label = self.descriptionLabel,
+            let text = label.attributedText?.string as NSString?,
+            let descriptionSubtextsToActions = self.descriptionSubtextsToActions else {
+                return
+        }
+        for subtitlesToAction in descriptionSubtextsToActions {
+            let range = text.range(of: subtitlesToAction.key)
+            let index = label.indexOfAttributedTextCharacterAtPoint(point: location)
+
+            if checkRange(range, contain: index) == true {
+                subtitlesToAction.value()
+                return
+            }
+        }
+    }
+}
+
+// MARK: support code
+// Source: https://www.codementor.io/@nguyentruongky/hyperlink-label-qv2k8rpk9
+
+func checkRange(_ range: NSRange, contain index: Int) -> Bool {
+    return index > range.location && index < range.location + range.length
+}
+
+extension UILabel {
+    func indexOfAttributedTextCharacterAtPoint(point: CGPoint) -> Int {
+        assert(self.attributedText != nil, "This method is developed for attributed string")
+        let textStorage = NSTextStorage(attributedString: self.attributedText!)
+        let layoutManager = NSLayoutManager()
+        textStorage.addLayoutManager(layoutManager)
+        let textContainer = NSTextContainer(size: self.frame.size)
+        textContainer.lineFragmentPadding = 0
+        textContainer.maximumNumberOfLines = self.numberOfLines
+        textContainer.lineBreakMode = self.lineBreakMode
+        layoutManager.addTextContainer(textContainer)
+
+        let index = layoutManager.characterIndex(for: point, in: textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
+        return index
     }
 }
